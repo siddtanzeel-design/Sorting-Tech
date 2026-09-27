@@ -1,43 +1,29 @@
-def Merge(arr, low, mid, high):
-    i = low
-    j = mid+1
-    k = 0
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr)//2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
 
-    temp = [0] * (high-low+1)
-    while i <= mid and j <= high:
-        if arr[i] <= arr[j]:
-            temp[k] = arr[i]
-            k += 1
-            i += 1
+    return merge(left, right)
+
+def merge(left, right):
+    result = []
+    i = j = 0
+
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i+=1
         else:
-            temp[k] = arr[j]
-            k += 1
-            j += 1
-    while i <= mid:
-        temp[k] = arr[i]
-        k += 1
-        i += 1
-    while j <= high:
-        temp[k] = arr[j]
-        k += 1
-        j += 1
+            result.append(right[j])
+            j+=1
 
-    k = 0
-    for i in range(low, high+1):
-        arr[i] = temp[k]
-        k += 1
+    result.extend(left[i:])
+    result.extend(right[j:])
 
-def MergeSort(arr, low, high):
-    if low < high:
-        mid = (low + high) // 2
-        MergeSort(arr, low, mid)
-        MergeSort(arr, mid+1, high)
+    return result
 
-        Merge(arr, low, mid, high)
+arr = list(map(int, input("Enter numbers: ").split()))
 
-arr = list(map(int, input("Enter Values:- ").split()))
-n = len(arr)
-
-MergeSort(arr, 0, n-1)
-
-print("Sorted Array:- ", arr)
+print(merge_sort(arr))
